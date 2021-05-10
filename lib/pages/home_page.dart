@@ -1,20 +1,22 @@
 import 'package:bwa_cozy/models/city.dart';
 import 'package:bwa_cozy/models/space.dart';
+import 'package:bwa_cozy/models/tips.dart';
 import 'package:bwa_cozy/theme.dart';
+import 'package:bwa_cozy/widgets/bottom_navbar_item.dart';
 import 'package:bwa_cozy/widgets/city_card.dart';
 import 'package:bwa_cozy/widgets/space_card.dart';
+import 'package:bwa_cozy/widgets/tips_card.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: edge),
+        body: SafeArea(
+          bottom: false,
           child: ListView(
             children: [
+              SizedBox(height: edge),
               // Note: Title/Header
               Padding(
                   padding: EdgeInsets.only(left: edge),
@@ -95,10 +97,63 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
+              SizedBox(height: 30),
+              // Note: Tips & Guidance
+              Padding(
+                  padding: EdgeInsets.only(left: edge),
+                  child: Text('Tips & Guidance',
+                      style: regularTextStyle.copyWith(fontSize: 16))),
+              SizedBox(height: 16),
+              Padding(
+                  padding: EdgeInsets.only(left: edge),
+                  child: Column(
+                    children: [
+                      TipsCard(Tips(
+                          id: 1,
+                          title: 'City Guidelines',
+                          imageUrl: 'assets/tips1.png',
+                          updatedAt: '20 Apr')),
+                      SizedBox(height: 20),
+                      TipsCard(Tips(
+                          id: 2,
+                          title: 'Jakarta Fairship',
+                          imageUrl: 'assets/tips2.png',
+                          updatedAt: '11 Dec'))
+                    ],
+                  )),
+              SizedBox(height: 70 + edge)
             ],
           ),
         ),
-      ),
-    );
+        floatingActionButton: Container(
+          height: 65,
+          width: MediaQuery.of(context).size.width - (2 * edge),
+          margin: EdgeInsets.symmetric(horizontal: edge),
+          decoration: BoxDecoration(
+              color: Color(0xffF6F7F8),
+              borderRadius: BorderRadius.circular(23)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              BottomNavbarItem(
+                imageUrl: 'assets/icon_home.png',
+                isActive: true,
+              ),
+              BottomNavbarItem(
+                imageUrl: 'assets/icon_email.png',
+                isActive: false,
+              ),
+              BottomNavbarItem(
+                imageUrl: 'assets/icon_card.png',
+                isActive: false,
+              ),
+              BottomNavbarItem(
+                imageUrl: 'assets/icon_love.png',
+                isActive: false,
+              )
+            ],
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat);
   }
 }
