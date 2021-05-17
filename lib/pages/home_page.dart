@@ -1,16 +1,21 @@
 import 'package:bwa_cozy/models/city.dart';
 import 'package:bwa_cozy/models/space.dart';
 import 'package:bwa_cozy/models/tips.dart';
+import 'package:bwa_cozy/providers/space_provider.dart';
 import 'package:bwa_cozy/theme.dart';
 import 'package:bwa_cozy/widgets/bottom_navbar_item.dart';
 import 'package:bwa_cozy/widgets/city_card.dart';
 import 'package:bwa_cozy/widgets/space_card.dart';
 import 'package:bwa_cozy/widgets/tips_card.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var spaceProvider = Provider.of<SpaceProvider>(context);
+    spaceProvider.getRecommendedSpaces();
+
     return Scaffold(
         backgroundColor: whiteColor,
         body: SafeArea(
@@ -67,36 +72,30 @@ class HomePage extends StatelessWidget {
               SizedBox(height: 16),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: edge),
-                child: Column(
-                  children: [
-                    SpaceCard(Space(
-                        id: 1,
-                        name: 'Kuretakeso Hott',
-                        imageUrl: 'assets/space1.png',
-                        price: 52,
-                        city: 'Bandung',
-                        country: 'Indonesia',
-                        rating: 4)),
-                    SizedBox(height: 30),
-                    SpaceCard(Space(
-                        id: 2,
-                        name: 'Roemah Nenek',
-                        imageUrl: 'assets/space2.png',
-                        price: 11,
-                        city: 'Bogor',
-                        country: 'Indonesia',
-                        rating: 5)),
-                    SizedBox(height: 30),
-                    SpaceCard(Space(
-                        id: 3,
-                        name: 'Darrling How',
-                        imageUrl: 'assets/space3.png',
-                        price: 20,
-                        city: 'Padang',
-                        country: 'Indonesia',
-                        rating: 3)),
-                  ],
-                ),
+                child: FutureBuilder(
+                    future: spaceProvider.getRecommendedSpaces(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List<Space> data = snapshot.data;
+                        int index = 0;
+
+                        return Column(
+                          children: data.map((item) {
+                            index++;
+                            return Container(
+                              margin: EdgeInsets.only(
+                                top: index == 1 ? 0 : 30,
+                              ),
+                              child: SpaceCard(item),
+                            );
+                          }).toList(),
+                        );
+
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    }),
               ),
               SizedBox(height: 30),
               // Note: Tips & Guidance
